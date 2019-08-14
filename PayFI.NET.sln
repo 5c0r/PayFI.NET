@@ -5,14 +5,16 @@ VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PayFI.Web.Example", "PayFI.Web.Example\PayFI.Web.Example.csproj", "{A029F498-62BD-463C-A51F-83F2F50CA5D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayFI.NET.Library", "PayFI.NET\PayFI.NET.Library.csproj", "{A6F8DAC5-C3AC-4BB4-A551-9803079E25AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PayFI.NET.Library", "PayFI.NET\PayFI.NET.Library.csproj", "{A6F8DAC5-C3AC-4BB4-A551-9803079E25AD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EE58D09F-8D42-4D96-A0B9-060CF52DDFE3}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayFI.Console.Example", "PayFI.Console.Example\PayFI.Console.Example.csproj", "{E5DE3E1A-3972-4A54-A38C-26150A7038E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PayFI.Console.Example", "PayFI.Console.Example\PayFI.Console.Example.csproj", "{E5DE3E1A-3972-4A54-A38C-26150A7038E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayFI.NET.Tests", "PayFI.NET.Tests\PayFI.NET.Tests.csproj", "{2FE0FE72-A159-4D77-B8CE-AF25AB1CFFEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{E5DE3E1A-3972-4A54-A38C-26150A7038E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5DE3E1A-3972-4A54-A38C-26150A7038E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5DE3E1A-3972-4A54-A38C-26150A7038E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FE0FE72-A159-4D77-B8CE-AF25AB1CFFEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FE0FE72-A159-4D77-B8CE-AF25AB1CFFEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FE0FE72-A159-4D77-B8CE-AF25AB1CFFEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FE0FE72-A159-4D77-B8CE-AF25AB1CFFEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
