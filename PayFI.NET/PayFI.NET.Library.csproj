@@ -6,11 +6,14 @@
 
   <ItemGroup>
     <Folder Include="Model\CheckoutFinland\Merchant\" />
+    <Folder Include="Model\CheckoutFinland\Exception\" />
     <Folder Include="Model\Paytrail\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Baseline" Version="1.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="RestSharp" Version="106.6.10" />
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
   </ItemGroup>
 

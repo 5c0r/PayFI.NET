@@ -12,7 +12,7 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
         public static string RequestBodyToString(object anything)
         {
             // TODO: If null ?
-            return JsonConvert.SerializeObject(anything).ToString();
+            return JsonConvert.SerializeObject(anything, JsonNetSerializer.SerializerSettings).ToString();
         }
 
         public static IEnumerable<string> ConvertCustomRequestHeaders(IDictionary<string, string> requestHeaders)
@@ -43,5 +43,27 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
                 return sb.ToString();
             }
         }
+
+        public static string CalculateHmac(string secretKey, IList<string> headers, string jsonBody)
+        {
+            byte[] secretByte = Encoding.ASCII.GetBytes(secretKey);
+
+            IEnumerable<string> convertedHeaders = headers.Concat(new List<string>() { jsonBody });
+
+            // TODO: Should it be Environment.Newline ?
+            byte[] requestPayload = Encoding.ASCII.GetBytes(string.Join("\n", convertedHeaders));
+
+            using (HMACSHA256 hmac = new HMACSHA256(secretByte))
+            {
+                var byteResult = hmac.ComputeHash(requestPayload);
+
+                StringBuilder sb = new StringBuilder();
+                foreach (byte b in byteResult)
+                    sb.Append(b.ToString("X2"));
+
+                return sb.ToString();
+            }
+        }
+
     }
 }
