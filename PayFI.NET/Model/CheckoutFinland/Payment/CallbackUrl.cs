@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PayFI.NET.Model.CheckoutFinland.Payment
+namespace PayFI.NET.Library.Model.CheckoutFinland.Payment
 {
     public sealed class CallbackUrl
     {

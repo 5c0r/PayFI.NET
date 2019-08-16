@@ -9,12 +9,6 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
 {
     public sealed class EncryptionUtils
     {
-        public static string RequestBodyToString(object anything)
-        {
-            // TODO: If null ?
-            return JsonConvert.SerializeObject(anything, JsonNetSerializer.SerializerSettings).ToString();
-        }
-
         public static IEnumerable<string> ConvertCustomRequestHeaders(IDictionary<string, string> requestHeaders)
         {
             return requestHeaders
@@ -44,7 +38,7 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
             }
         }
 
-        public static string CalculateHmac(string secretKey, IList<string> headers, string jsonBody)
+        public static string CalculateHmac(string secretKey, IEnumerable<string> headers, string jsonBody)
         {
             byte[] secretByte = Encoding.ASCII.GetBytes(secretKey);
 

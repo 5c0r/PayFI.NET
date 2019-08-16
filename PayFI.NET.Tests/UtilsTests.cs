@@ -1,3 +1,4 @@
+using FluentAssertions;
 using PayFI.NET.Library.Model.CheckoutFinland;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace PayFI.NET.Tests
         [Fact]
         public void CanEncryptWithEmptyBody()
         {
+            const string expected = "9ebf9b5ea57b6cbb26ffe539a0c52681e52f2c86e24c606ba042d972168b0dba";
             IDictionary<string, string> headersDictionary = new Dictionary<string, string>() {
                 { CheckoutRequestHeaders.Account, "375917" },
                 { CheckoutRequestHeaders.Algorithm, "sha256" },
@@ -23,10 +25,10 @@ namespace PayFI.NET.Tests
             var jsonBody = string.Empty;
 
             var encryptedString = EncryptionUtils.CalculateHmac(secretKey, headersDictionary, jsonBody);
+            var anotherEncryptedString = EncryptionUtils.CalculateHmac(secretKey, EncryptionUtils.ConvertCustomRequestHeaders(headersDictionary), jsonBody);
 
-            Assert.Equal("9ebf9b5ea57b6cbb26ffe539a0c52681e52f2c86e24c606ba042d972168b0dba", encryptedString, ignoreCase: true);
-
-
+            encryptedString.Should().BeEquivalentTo(expected);
+            anotherEncryptedString.Should().BeEquivalentTo(expected);
         }
 
         [Fact]

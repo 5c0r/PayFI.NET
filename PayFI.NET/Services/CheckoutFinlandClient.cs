@@ -1,16 +1,17 @@
 ﻿using Baseline;
 using PayFI.NET.Library.Model.CheckoutFinland;
-using PayFI.NET.Model.CheckoutFinland.Payment;
+using PayFI.NET.Library.Model.CheckoutFinland.Payment;
 using PayFI.NET.Model.Merchant;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace PayFI.NET
 {
+    //<summary>
+    // References : https://koumoul.com/openapi-viewer/?url=https://checkoutfinland.github.io/psp-api/checkout-psp-api.yaml&proxy=false
+    //</summary>
     public class CheckoutRequestHeaders
     {
         public static readonly string Account = "checkout-account";
@@ -18,9 +19,9 @@ namespace PayFI.NET
         public static readonly string Method = "checkout-method";
         public static readonly string NOnce = "checkout-nonce";
         public static readonly string Timestamp = "checkout-timestamp";
+        public static readonly string TransactionId = "checkout-transaction-id";
 
         public static readonly string Signature = "signature";
-
     }
 
     public class CheckoutFinlandClient
@@ -28,12 +29,19 @@ namespace PayFI.NET
         const string ApiUrl = "https://api.checkout.fi";
         private readonly IRestClient _client;
 
-        private readonly IReadOnlyList<string> checkoutPrequisiteHeaders = new List<string>()
+        // Header that should be client.DefaultHeaders
+        private readonly IReadOnlyList<string> persistentHeader = new List<string>()
         {
-            CheckoutRequestHeaders.Account, CheckoutRequestHeaders.Algorithm, CheckoutRequestHeaders.Method, CheckoutRequestHeaders.NOnce, CheckoutRequestHeaders.Timestamp
+            CheckoutRequestHeaders.Account, CheckoutRequestHeaders.Algorithm
         };
 
-        // TODO: No , not here, somewhere else please
+        // Header that changes for each request
+        private readonly IReadOnlyList<string> scopedHeader = new List<string>()
+        {
+            CheckoutRequestHeaders.Method, CheckoutRequestHeaders.NOnce, CheckoutRequestHeaders.Timestamp
+        };
+        // TODO: Some request need checkout-transaction-id
+
         private readonly string _secretKey;
         private readonly string _accountId;
 
@@ -56,7 +64,7 @@ namespace PayFI.NET
             _secretKey = secretKey;
         }
 
-        public IEnumerable<PaymentProvider> GetPaymentProviders()
+        public IReadOnlyList<PaymentProvider> GetPaymentProviders()
         {
             IRestRequest request = CreateRequest("/merchants/payment-providers", Method.GET, null);
 
@@ -72,41 +80,24 @@ namespace PayFI.NET
 
         public IRestResponse GetPayment()
         {
-
             IRestRequest request = CreateRequest("/payments/0fbda2ce-8115-11e8-a3c2-1b42d60c4148", Method.GET, null);
             var response = _client.Execute(request);
 
             return response;
         }
 
-        public IRestResponse CreatePayment()
+        // TODO: Exception handling
+        public CreatePaymentResponse CreatePayment(CreatePaymentRequestBody createRequestBody)
         {
-            CreatePaymentRequestBody requestBody = new CreatePaymentRequestBody()
-            {
-                Stamp = Guid.NewGuid().ToString(),
-                Reference = Guid.NewGuid().ToString(),
-                Amount = 1000,
-                Currency = "EUR",
-                Language = "EN",
-                Customer = new Customer()
-                {
-                    Email = "test@gmail.com",
-                    FirstName = "Tri",
-                    LastName = "Helen"
-                },
-                DeliveryAddress = new Address()
-                {
-                    City = "Helsinki",
-                    Country = ""
-                }
-            };
+            IRestRequest request = CreateRequest("/payments/", Method.POST, createRequestBody);
+            var response = _client.Execute<CreatePaymentResponse>(request);
 
-            IRestRequest request = CreateRequest("/payments/", Method.POST, requestBody);
-            var response = _client.Execute(request);
-
-            return response;
+            return response.Data;
         }
 
+        // <summary>
+        // Create IRestRequest object with required headers for Checkout API
+        // </summary>
         private IRestRequest CreateRequest(string url, Method method, object requestBody)
         {
             IRestRequest request = new RestRequest(url, method, DataFormat.Json);
@@ -115,7 +106,7 @@ namespace PayFI.NET
             {
                 { CheckoutRequestHeaders.Method, method.ToString("g") },
                 { CheckoutRequestHeaders.NOnce, Guid.NewGuid().ToString() },
-                { CheckoutRequestHeaders.Timestamp, DateTimeOffset.UtcNow.ToString("s", System.Globalization.CultureInfo.InvariantCulture) }
+                { CheckoutRequestHeaders.Timestamp, DateTimeOffset.UtcNow.ToIsoDateTimeString() }
             };
 
             headerDictionary.ToList().Each(kv => { request.AddHeader(kv.Key, kv.Value); });
@@ -124,8 +115,7 @@ namespace PayFI.NET
                     defaultHeaders.Concat(headerDictionary).ToDictionary(x => x.Key, x => x.Value)
                     );
 
-            var signature = EncryptionUtils.CalculateHmac(_secretKey, toEncrypt.ToList(),
-                    requestBody != null ? EncryptionUtils.RequestBodyToString(requestBody) : string.Empty);
+            var signature = EncryptionUtils.CalculateHmac(_secretKey, toEncrypt.ToList(), SerializationUtils.RequestBodyToString(requestBody));
 
             request.AddHeader(CheckoutRequestHeaders.Signature, signature.ToLower());
             if (requestBody != null) request.AddJsonBody(requestBody);

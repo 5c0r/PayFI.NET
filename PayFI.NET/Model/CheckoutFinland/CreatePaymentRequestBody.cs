@@ -1,15 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using PayFI.NET.Model.CheckoutFinland.Payment;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using PayFI.NET.Library.Model.CheckoutFinland.Payment;
 
 namespace PayFI.NET.Library.Model.CheckoutFinland
 {
-    // Maybe NOT...
-    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
-    public sealed class CreatePaymentRequestBody
+    // TODO: Request body builder ?!?!?!?
+    public sealed class CreatePaymentRequestBody : PaymentRequest
     {
         public string Stamp { get; set; }
         public string Reference { get; set; }
