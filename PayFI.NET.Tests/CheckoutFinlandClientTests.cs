@@ -108,6 +108,23 @@ namespace PayFI.NET.Tests
             var paymentInformation = clientUnderTest.GetTransactionInformation(paymentResponse.TransactionId);
             paymentInformation.Should().NotBeNull();
             paymentInformation.Id.Should().NotBeEmpty();
+
+            var refundRequest = new MerchantRefundRequestBody()
+            {
+                Amount = 100,
+                CallbackUrls = new CallbackUrl()
+                {
+                    Success = "https://something.com/success/",
+                    Cancel = "https://something.com/cancel/"
+                },
+                Items = new List<Item>()
+            };
+
+            // TODO: Pay the damn transaction
+
+            //var refund = clientUnderTest.CreateRefund(paymentResponse.TransactionId, refundRequest);
+            //refund.TransactionId.Should().Be(paymentResponse.TransactionId);
+            //refund.Status.Should().Be("0");
         }
 
     }

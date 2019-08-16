@@ -97,9 +97,24 @@ namespace PayFI.NET
             return response.Data;
         }
 
-        public IRestResponse CreateRefund()
+        public RefundResponse CreateRefund(Guid transactionId, MerchantRefundRequestBody refundRequest)
         {
-            throw new NotImplementedException();
+            // todo: Create transaction request
+            if (transactionId == null || transactionId == Guid.Empty) throw new Exception("Invalid transactionId provided");
+
+            var extraHeader = new Dictionary<string, string>() {
+                { CheckoutRequestHeaders.TransactionId, transactionId.ToString() }
+            };
+
+            IRestRequest request = CreateRequest(RequestTemplateUrls.RefundPayment, Method.POST, refundRequest, extraHeader)
+                .AddParameter("transactionId", transactionId, ParameterType.UrlSegment);
+            // End of create transaction request
+
+            var response = _client.Execute<RefundResponse>(request);
+
+            // If not 201 , then
+
+            return response.Data;
         }
 
         // TODO: Exception handling

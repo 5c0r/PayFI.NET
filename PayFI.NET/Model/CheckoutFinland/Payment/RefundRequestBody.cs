@@ -8,6 +8,7 @@ namespace PayFI.NET.Library.Model.CheckoutFinland.Payment
     {
         public double Amount { get; set; }
         public CallbackUrl CallbackUrls { get; set; }
+        public IEnumerable<Item> Items { get; set; }
     }
 
     public class ShopInShopRefundRequestBody
