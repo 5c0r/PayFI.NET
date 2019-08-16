@@ -78,12 +78,28 @@ namespace PayFI.NET
             throw new Exception("Something happened");
         }
 
-        public IRestResponse GetPayment()
+        // TODO: This is not implemented yet on Checkout Finland new API
+        public PaymentResponse GetTransactionInformation(Guid transactionId)
         {
-            IRestRequest request = CreateRequest("/payments/0fbda2ce-8115-11e8-a3c2-1b42d60c4148", Method.GET, null);
-            var response = _client.Execute(request);
+            // todo: Create transaction request
+            if (transactionId == null || transactionId == Guid.Empty) throw new Exception("Invalid transactionId provided");
 
-            return response;
+            var extraHeader = new Dictionary<string, string>() {
+                { CheckoutRequestHeaders.TransactionId, transactionId.ToString() }
+            };
+
+            IRestRequest request = CreateRequest("/payments/{transactionId}", Method.GET, null, extraHeader)
+                .AddParameter("transactionId", transactionId, ParameterType.UrlSegment);
+            // End of create transaction request
+
+            var response = _client.Execute<PaymentResponse>(request);
+            // TODO: Response handling
+            return response.Data;
+        }
+
+        public IRestResponse CreateRefund()
+        {
+            throw new NotImplementedException();
         }
 
         // TODO: Exception handling
@@ -95,10 +111,11 @@ namespace PayFI.NET
             return response.Data;
         }
 
+        // TODO: This is ugly af , maybe an Action<request,header> instead ?
         // <summary>
         // Create IRestRequest object with required headers for Checkout API
         // </summary>
-        private IRestRequest CreateRequest(string url, Method method, object requestBody)
+        private IRestRequest CreateRequest(string url, Method method, object requestBody, IDictionary<string, string> extraHeader = null)
         {
             IRestRequest request = new RestRequest(url, method, DataFormat.Json);
 
@@ -108,6 +125,9 @@ namespace PayFI.NET
                 { CheckoutRequestHeaders.NOnce, Guid.NewGuid().ToString() },
                 { CheckoutRequestHeaders.Timestamp, DateTimeOffset.UtcNow.ToIsoDateTimeString() }
             };
+
+            // TODO: If extra header already there , wut wut ?
+            if (extraHeader != null) extraHeader.ToList().Each(kv => { headerDictionary.Add(kv.Key, kv.Value); });
 
             headerDictionary.ToList().Each(kv => { request.AddHeader(kv.Key, kv.Value); });
 

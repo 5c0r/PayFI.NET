@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace PayFI.NET.Library.Model.CheckoutFinland
 {
@@ -58,6 +56,5 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
                 return sb.ToString();
             }
         }
-
     }
 }

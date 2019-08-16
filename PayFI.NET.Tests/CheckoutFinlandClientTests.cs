@@ -102,8 +102,12 @@ namespace PayFI.NET.Tests
 
             paymentResponse.Should().NotBeNull();
             paymentResponse.Href.Should().NotBeNullOrEmpty();
-            paymentResponse.TransactionId.Should().NotBeNullOrEmpty();
+            paymentResponse.TransactionId.Should().NotBeEmpty();
             paymentResponse.Providers.Length.Should().BeGreaterThan(0);
+
+            var paymentInformation = clientUnderTest.GetTransactionInformation(paymentResponse.TransactionId);
+            paymentInformation.Should().NotBeNull();
+            paymentInformation.Id.Should().NotBeEmpty();
         }
 
     }
