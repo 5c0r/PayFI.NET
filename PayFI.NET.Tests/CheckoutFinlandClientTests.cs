@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using PayFI.NET.Library.Model.CheckoutFinland;
 using PayFI.NET.Library.Model.CheckoutFinland.Payment;
+using PayFI.NET.Library.Services;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -22,15 +23,6 @@ namespace PayFI.NET.Tests
             paymentProviders.Count.Should().BeGreaterThan(0);
         }
 
-        //[Fact]
-        //public void CanGetPayment()
-        //{
-        //    var clientUnderTest = new CheckoutFinlandClient(testAccount, testSecretKey);
-
-        //    // TODO : stringId as param
-        //    var paymentProviders = clientUnderTest.GetPayment();
-        //}
-
         // TODO: This can be compiled into a BIG scenario
         [Fact]
         public void CanCreatePayment()
@@ -39,7 +31,7 @@ namespace PayFI.NET.Tests
 
             var orderId = Guid.NewGuid().ToString();
             var reference = Guid.NewGuid().ToString();
-            var stamp = Guid.NewGuid().ToString();
+            var stamp = Guid.NewGuid();
 
             var itemList = new List<Item>()
             {
@@ -77,6 +69,7 @@ namespace PayFI.NET.Tests
                     PostalCode = "01300",
                     County = string.Empty
                 },
+                // Should there be any transaction ID associated here ?
                 CallbackUrls = new CallbackUrl()
                 {
                     Success = "https://something.com/success/",

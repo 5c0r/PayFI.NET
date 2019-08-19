@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Model\CheckoutFinland\Merchant\" />
-    <Folder Include="Model\CheckoutFinland\Exception\" />
     <Folder Include="Model\Paytrail\" />
   </ItemGroup>
 

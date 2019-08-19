@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PayFI.NET.Library.Model.CheckoutFinland.Payment
 {
-    public sealed class Item
+    public sealed class Item : IHaveReference, IHaveStamp
     {
         public double UnitPrice { get; set; }
         public uint Units { get; set; }
@@ -14,13 +12,16 @@ namespace PayFI.NET.Library.Model.CheckoutFinland.Payment
         public string DeliveryDate { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }
-        [JsonIgnore]
-        public string OrderId { get; set; }
+
         // TODO: Guid or stamp?
-        public string Stamp { get; set; }
+        public Guid Stamp { get; set; }
         public string Reference { get; set; }
         public string Merchant { get; set; }
+
+        // This was needed in documentation ?!
         [JsonIgnore]
         public object Commission { get; set; }
+        [JsonIgnore]
+        public string OrderId { get; set; }
     }
 }

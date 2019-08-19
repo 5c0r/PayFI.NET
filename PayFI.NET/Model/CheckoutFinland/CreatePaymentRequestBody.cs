@@ -1,14 +1,10 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using PayFI.NET.Library.Model.CheckoutFinland.Payment;
+﻿using PayFI.NET.Library.Model.CheckoutFinland.Payment;
 
 namespace PayFI.NET.Library.Model.CheckoutFinland
 {
     // TODO: Request body builder ?!?!?!?
     public sealed class CreatePaymentRequestBody : PaymentRequest
     {
-        public string Stamp { get; set; }
-        public string Reference { get; set; }
         public double Amount { get; set; }
         public string Currency { get; set; }
         public string Language { get; set; }

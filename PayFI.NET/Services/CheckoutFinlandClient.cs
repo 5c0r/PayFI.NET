@@ -6,8 +6,9 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
-namespace PayFI.NET
+namespace PayFI.NET.Library.Services
 {
     //<summary>
     // References : https://koumoul.com/openapi-viewer/?url=https://checkoutfinland.github.io/psp-api/checkout-psp-api.yaml&proxy=false
@@ -27,15 +28,16 @@ namespace PayFI.NET
     public class CheckoutFinlandClient
     {
         const string ApiUrl = "https://api.checkout.fi";
+        const string RequestIdHeader = "cof-request-id";
         private readonly IRestClient _client;
 
-        // Header that should be client.DefaultHeaders
+        // TODO: Header that should be client.DefaultHeaders
         private readonly IReadOnlyList<string> persistentHeader = new List<string>()
         {
             CheckoutRequestHeaders.Account, CheckoutRequestHeaders.Algorithm
         };
 
-        // Header that changes for each request
+        // TODO: Header that changes for each request
         private readonly IReadOnlyList<string> scopedHeader = new List<string>()
         {
             CheckoutRequestHeaders.Method, CheckoutRequestHeaders.NOnce, CheckoutRequestHeaders.Timestamp
@@ -70,7 +72,7 @@ namespace PayFI.NET
 
             var response = _client.Execute<List<PaymentProvider>>(request);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 return response.Data;
             }
@@ -112,7 +114,7 @@ namespace PayFI.NET
 
             var response = _client.Execute<RefundResponse>(request);
 
-            // If not 201 , then
+            // If not 201 , then throw something 
 
             return response.Data;
         }
@@ -122,8 +124,13 @@ namespace PayFI.NET
         {
             IRestRequest request = CreateRequest("/payments/", Method.POST, createRequestBody);
             var response = _client.Execute<CreatePaymentResponse>(request);
-
+            
+            if(!response.IsSuccessful)
+            {
+                throw new Exception($" {response.ErrorMessage} - {RequestIdHeader}:{response.Headers.SingleOrDefault(x => x.Name.Equals(RequestIdHeader))?.Value}");
+            }
             return response.Data;
+
         }
 
         // TODO: This is ugly af , maybe an Action<request,header> instead ?

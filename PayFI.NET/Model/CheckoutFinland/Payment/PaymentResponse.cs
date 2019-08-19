@@ -2,7 +2,7 @@
 
 namespace PayFI.NET.Library.Model.CheckoutFinland.Payment
 {
-    public sealed class PaymentResponse
+    public sealed class PaymentResponse : IHaveStamp
     {
         public Guid Id { get; set; }
         public string Status { get; set; }

@@ -3,7 +3,7 @@ using System;
 
 namespace PayFI.NET.Library.Model.CheckoutFinland.Payment
 {
-    public sealed class CreatePaymentResponse
+    public sealed class CreatePaymentResponse : IHaveTransactionId
     {
         public Guid TransactionId { get; set; }
         public string Href { get; set; }
