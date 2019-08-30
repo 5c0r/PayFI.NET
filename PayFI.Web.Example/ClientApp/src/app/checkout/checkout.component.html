@@ -14,9 +14,11 @@
     <div *ngFor="let paymentProvider of paymentMethods; let i = index">
       <!-- {{ paymentProvider | json }} -->
       <form novalidate="true" method="POST" [attr.action]="paymentProvider.url" (submit)="onSubmit($event)">
-        <input *ngFor="let param of paymentProvider.parameters" type="hidden" [name]="param.name" [value]="param.value" />
-        <input type="submit" />
+        <input *ngFor="let param of paymentProvider.parameters" type="hidden" [name]="param.name"
+          [value]="param.value" />
+        <button>
           <img [attr.src]="paymentProvider.icon" />
+        </button>
       </form>
     </div>
   </div>

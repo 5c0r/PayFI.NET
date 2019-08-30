@@ -10,6 +10,12 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
             if (anything == null) return string.Empty;
             return JsonConvert.SerializeObject(anything, JsonNetSerializer.SerializerSettings).ToString();
         }
+
+        public static T DeserializeResponse<T>(string anything) where T : class
+        {
+            if (string.IsNullOrEmpty(anything)) return null;
+            return JsonConvert.DeserializeObject<T>(anything, JsonNetSerializer.SerializerSettings);
+        }
     }
 
     public static class DateTimeOffsetExtensions

@@ -31,6 +31,18 @@ namespace PayFI.Web.Example.Controllers
 
         }
 
+        [HttpGet("success")]
+        public IActionResult OnSuccessPayment()
+        {
+            return Ok();
+        }
+
+        [HttpGet("cancel")]
+        public IActionResult OnCancelledPayment()
+        {
+            return Ok();
+        }
+
         [HttpPost("create")]
         public IActionResult MakePayment()
         {

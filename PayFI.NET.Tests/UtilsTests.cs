@@ -1,6 +1,6 @@
 using FluentAssertions;
 using PayFI.NET.Library.Model.CheckoutFinland;
-using System;
+using PayFI.NET.Library.Services;
 using System.Collections.Generic;
 using Xunit;
 

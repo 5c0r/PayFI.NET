@@ -10,6 +10,7 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
         public static IEnumerable<string> ConvertCustomRequestHeaders(IDictionary<string, string> requestHeaders)
         {
             return requestHeaders
+                .Where(x => x.Key.StartsWith("checkout-"))
                 .OrderBy(x => x.Key)
                 .Select(x => $"{x.Key}:{x.Value}")
                 .ToList();

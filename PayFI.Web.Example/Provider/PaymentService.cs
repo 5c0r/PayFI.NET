@@ -81,26 +81,27 @@ namespace PayFI.Web.Example.Provider
                 {
                     City = "Helsinki",
                     Country = "FI",
-                    StreetAddress = "Atomi 2",
+                    StreetAddress = "Something else 2",
                     PostalCode = "01300",
                     County = string.Empty
                 },
-                // Should there be any transaction ID associated here ?
+                // What is call back , what is redirect
+                // TODO: Url/callback cannot be an IP address :(
                 CallbackUrls = new CallbackUrl()
                 {
-                    Success = "https://something.com/success/",
-                    Cancel = "https://something.com/cancel/"
+                    Success = "https://something.com/api/checkout/success",
+                    Cancel = "https://something.com/api/checkout/cancel"
                 },
                 RedirectUrls = new CallbackUrl()
                 {
-                    Success = "https://something.com/success/",
-                    Cancel = "https://something.com/cancel/"
+                    Success = "https://something.com/checkout-success",
+                    Cancel = "https://something.com/checkout-cancel"
                 },
                 InvoicingAddress = new Address()
                 {
                     City = "Helsinki",
                     Country = "FI",
-                    StreetAddress = "Atomi 2",
+                    StreetAddress = "Something 2",
                     PostalCode = "01300",
                     County = string.Empty
                 },

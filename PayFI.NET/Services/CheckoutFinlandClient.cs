@@ -124,13 +124,20 @@ namespace PayFI.NET.Library.Services
         {
             IRestRequest request = CreateRequest("/payments/", Method.POST, createRequestBody);
             var response = _client.Execute<CreatePaymentResponse>(request);
-            
+            var responseContent = response.Content;
+
             if(!response.IsSuccessful)
             {
-                throw new Exception($" {response.ErrorMessage} - {RequestIdHeader}:{response.Headers.SingleOrDefault(x => x.Name.Equals(RequestIdHeader))?.Value}");
+                var errorResponse = SerializationUtils.DeserializeResponse<CheckoutError>(responseContent);
+                throw new Exception($" {errorResponse.Message} - {RequestIdHeader}:{response.Headers.SingleOrDefault(x => x.Name.Equals(RequestIdHeader))?.Value}");
             }
-            return response.Data;
+            var responseDictionary = response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString());
+            var encryptedSignatre =  EncryptionUtils.CalculateHmac(_secretKey, responseDictionary, responseContent);
 
+            var responseSignature = response.Headers.SingleOrDefault(x => x.Name.Equals("signature"))?.Value.ToString();
+            if (encryptedSignatre == responseSignature) return response.Data;
+
+            throw new Exception($"Signature mismatch");
         }
 
         // TODO: This is ugly af , maybe an Action<request,header> instead ?
