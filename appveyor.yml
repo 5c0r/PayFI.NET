@@ -28,7 +28,7 @@ test_script:
   - cmd: dotnet restore ./PayFI.Net.Tests/PayFI.Net.Tests.csproj --verbosity m
   # run the unit tests (requires changing into the test directory)
   - cmd: cd PayFI.Net.Tests
-  - cmd: dotnet xunit
+  - cmd: dotnet test
 on_finish :
   # any cleanup in here
 deploy: off
