@@ -19,7 +19,7 @@ build_script:
 after_build:
   # For once the build has completed
 artifacts:
- - path: '\src\bin\Debug\netstandard2.0\publish'
+ - path: './PayFI.NET/bin/Debug/netstandard2.0/publish'
    name: PayFI.NET
    type: Library
 clone_depth: 1

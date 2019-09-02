@@ -171,7 +171,7 @@ namespace PayFI.NET.Library.Services
 
         // TODO: This is ugly af , maybe an Action<request,header> instead ?
         // <summary>
-        // Create IRestRequest object with required headers for Checkout API
+        // Create IRestRequest object with required headers for CheckoutFinland API
         // </summary>
         private IRestRequest CreateRequest(string url, Method method, object requestBody, IDictionary<string, string> extraHeader = null)
         {
