@@ -9,7 +9,8 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
     {
         public static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
 
         public JsonNetSerializer()

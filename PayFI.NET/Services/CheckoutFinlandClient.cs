@@ -1,4 +1,5 @@
 ﻿using Baseline;
+using Newtonsoft.Json;
 using PayFI.NET.Library.Model.CheckoutFinland;
 using PayFI.NET.Library.Model.CheckoutFinland.Payment;
 using PayFI.NET.Model.Merchant;
@@ -112,18 +113,27 @@ namespace PayFI.NET.Library.Services
                 .AddParameter("transactionId", transactionId, ParameterType.UrlSegment);
             // End of create transaction request
 
-            var response = _client.Execute<RefundResponse>(request);
+            var response = _client.Execute(request);
+            var responseContent = response.Content;
+            // If not 201 , then throw something
+            if (!response.IsSuccessful)
+            {
+                var errorResponse = SerializationUtils.DeserializeResponse<CheckoutError>(responseContent);
+                throw new Exception($" {errorResponse.Message} - {RequestIdHeader}:{response.Headers.SingleOrDefault(x => x.Name.Equals(RequestIdHeader))?.Value}");
+            }
 
-            // If not 201 , then throw something 
-
-            return response.Data;
+            if (TryGetValidatedResponse<RefundResponse>(response, out var responseData))
+            {
+                return responseData;
+            }
+            throw new Exception($"{nameof(CreateRefund)} : Response not validated due to signature mismatch");
         }
 
         // TODO: Exception handling
         public CreatePaymentResponse CreatePayment(CreatePaymentRequestBody createRequestBody)
         {
             IRestRequest request = CreateRequest("/payments/", Method.POST, createRequestBody);
-            var response = _client.Execute<CreatePaymentResponse>(request);
+            var response = _client.Execute(request);
             var responseContent = response.Content;
 
             if(!response.IsSuccessful)
@@ -131,13 +141,32 @@ namespace PayFI.NET.Library.Services
                 var errorResponse = SerializationUtils.DeserializeResponse<CheckoutError>(responseContent);
                 throw new Exception($" {errorResponse.Message} - {RequestIdHeader}:{response.Headers.SingleOrDefault(x => x.Name.Equals(RequestIdHeader))?.Value}");
             }
-            var responseDictionary = response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString());
-            var encryptedSignatre =  EncryptionUtils.CalculateHmac(_secretKey, responseDictionary, responseContent);
 
-            var responseSignature = response.Headers.SingleOrDefault(x => x.Name.Equals("signature"))?.Value.ToString();
-            if (encryptedSignatre == responseSignature) return response.Data;
-
+            if(TryGetValidatedResponse<CreatePaymentResponse>(response, out var responseData))
+            {
+                return responseData;
+            }
+          
             throw new Exception($"Signature mismatch");
+        }
+
+        // Quite dependent on JsonNet and RestSharp..
+        private bool TryGetValidatedResponse<T>(IRestResponse restResponse, out T responseData ) where T: class, new()
+        {
+            // Validate response
+            var responseDictionary = EncryptionUtils.ConvertCustomRequestHeaders(restResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()));
+
+            var encryptedSignature = EncryptionUtils.CalculateHmac(_secretKey, responseDictionary, restResponse.Content);
+
+            var responseSignature = restResponse.Headers.SingleOrDefault(x => x.Name.Equals("signature"))?.Value.ToString();
+            if (encryptedSignature == responseSignature)
+            {
+                responseData = JsonConvert.DeserializeObject<T>(restResponse.Content, JsonNetSerializer.SerializerSettings);
+                return true;
+            }
+
+            responseData = null;
+            return false;
         }
 
         // TODO: This is ugly af , maybe an Action<request,header> instead ?
@@ -166,7 +195,7 @@ namespace PayFI.NET.Library.Services
 
             var signature = EncryptionUtils.CalculateHmac(_secretKey, toEncrypt.ToList(), SerializationUtils.RequestBodyToString(requestBody));
 
-            request.AddHeader(CheckoutRequestHeaders.Signature, signature.ToLower());
+            request.AddHeader(CheckoutRequestHeaders.Signature, signature);
             if (requestBody != null) request.AddJsonBody(requestBody);
 
             return request;

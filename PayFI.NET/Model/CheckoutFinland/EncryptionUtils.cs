@@ -18,12 +18,12 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
 
         public static string CalculateHmac(string secretKey, IDictionary<string, string> requestHeaders, string jsonBody)
         {
-            byte[] secretByte = Encoding.ASCII.GetBytes(secretKey);
+            byte[] secretByte = Encoding.UTF8.GetBytes(secretKey);
 
             IEnumerable<string> convertedHeaders = ConvertCustomRequestHeaders(requestHeaders).Concat(new List<string>() { jsonBody });
 
             // TODO: Should it be Environment.Newline ?
-            byte[] requestPayload = Encoding.ASCII.GetBytes(string.Join("\n", convertedHeaders ));
+            byte[] requestPayload = Encoding.UTF8.GetBytes(string.Join("\n", convertedHeaders ));
 
             using (HMACSHA256 hmac = new HMACSHA256(secretByte))
             {
@@ -31,7 +31,7 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
 
                 StringBuilder sb = new StringBuilder();
                 foreach (byte b in byteResult)
-                    sb.Append(b.ToString("X2"));
+                    sb.Append(b.ToString("x2"));
 
                 return sb.ToString();
             }
@@ -39,12 +39,12 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
 
         public static string CalculateHmac(string secretKey, IEnumerable<string> headers, string jsonBody)
         {
-            byte[] secretByte = Encoding.ASCII.GetBytes(secretKey);
+            byte[] secretByte = Encoding.UTF8.GetBytes(secretKey);
 
             IEnumerable<string> convertedHeaders = headers.Concat(new List<string>() { jsonBody });
 
             // TODO: Should it be Environment.Newline ?
-            byte[] requestPayload = Encoding.ASCII.GetBytes(string.Join("\n", convertedHeaders));
+            byte[] requestPayload = Encoding.UTF8.GetBytes(string.Join("\n", convertedHeaders));
 
             using (HMACSHA256 hmac = new HMACSHA256(secretByte))
             {
@@ -52,7 +52,7 @@ namespace PayFI.NET.Library.Model.CheckoutFinland
 
                 StringBuilder sb = new StringBuilder();
                 foreach (byte b in byteResult)
-                    sb.Append(b.ToString("X2"));
+                    sb.Append(b.ToString("x2"));
 
                 return sb.ToString();
             }
