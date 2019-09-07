@@ -4,7 +4,6 @@ using PayFI.NET.Library.Services;
 using System.Collections.Generic;
 using Xunit;
 
-
 namespace PayFI.NET.Tests
 {
     public class UtilsTests

@@ -158,7 +158,7 @@ namespace PayFI.NET.Library.Services
 
             var encryptedSignature = EncryptionUtils.CalculateHmac(_secretKey, responseDictionary, restResponse.Content);
 
-            var responseSignature = restResponse.Headers.SingleOrDefault(x => x.Name.Equals("signature"))?.Value.ToString();
+            var responseSignature = restResponse.Headers.SingleOrDefault(x => x.Name.Equals(CheckoutRequestHeaders.Signature))?.Value.ToString();
             if (encryptedSignature == responseSignature)
             {
                 responseData = JsonConvert.DeserializeObject<T>(restResponse.Content, JsonNetSerializer.SerializerSettings);

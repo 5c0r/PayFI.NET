@@ -50,8 +50,8 @@ namespace PayFI.NET.Tests
                 Stamp = stamp,
                 Reference = reference,
                 Amount = 100,
-                Currency = "EUR",
-                Language = "EN",
+                Currency = Currencies.Euro,
+                Language = Languages.English,
                 Customer = new Customer()
                 {
                     Email = "test@gmail.com",
