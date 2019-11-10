@@ -6,6 +6,7 @@ namespace PayFI.NET.Library.Model.Paytrail
 {
     public sealed class RequestTemplateUrls
     {
+        public static readonly string GetToken = "/";
         public static readonly string CreatePayment = "/api-payment/create";
     }
 }
