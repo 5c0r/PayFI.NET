@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PayFI.NET.Library.Model.CheckoutFinland
 {
-    public class RequestTemplateUrls
+    public sealed class RequestTemplateUrls
     {
         public static readonly string GetPayments = "/payments";
         public static readonly string GetPayment = "/payments/{transactionId}";
