@@ -11,7 +11,7 @@ namespace PayFI.NET.Library.Model.CheckoutFinland.Exceptions
             CheckoutRequestId = requestId;
         }
 
-        public CheckoutFinlandException(string requestId, string message, Exception e ) : base(message, e)
+        public CheckoutFinlandException(string requestId, string message, Exception innerException ) : base(message, innerException)
         {
             CheckoutRequestId = requestId;
         }

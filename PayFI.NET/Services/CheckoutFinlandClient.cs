@@ -14,7 +14,7 @@ namespace PayFI.NET.Library.Services
     //<summary>
     // References : https://koumoul.com/openapi-viewer/?url=https://checkoutfinland.github.io/psp-api/checkout-psp-api.yaml&proxy=false
     //</summary>
-    public class CheckoutRequestHeaders
+    public sealed class CheckoutRequestHeaders
     {
         public static readonly string Account = "checkout-account";
         public static readonly string Algorithm = "checkout-algorithm";
